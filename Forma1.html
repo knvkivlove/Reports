@@ -36,10 +36,6 @@
             margin-bottom: 15px;
         }
 
-        .inline-group div {
-            text-align: center;
-        }
-
         .radio-group {
             display: flex;
             justify-content: center;
@@ -57,7 +53,7 @@
             margin: 0 0 0 5px;
         }
 
-        select, input[type="number"], input[type="text"], input[type="time"] {
+        select, input[type="number"], input[type="text"] {
             padding: 8px;
             width: 100%;
             box-sizing: border-box;
@@ -75,7 +71,6 @@
             display: none;
         }
 
-        /* Стили для чекбокса и подписи "Участвовал" */
         .checkbox-group {
             display: flex;
             align-items: center;
@@ -98,12 +93,28 @@
             const hoursField = document.getElementById('hours-group');
             hoursField.style.display = (selectedOption === "ОП" || selectedOption === "ПП") ? "block" : "none";
         }
+
+        function formatHours(input) {
+            let value = input.value.replace(/\D/g, ''); // Удаление нецифровых символов
+            if (value.length === 0) {
+                input.value = '';
+                return;
+            }
+
+            // Форматирование
+            if (value.length === 1 || value.length === 2) {
+                input.value = value + ':00'; // Формат чч:мм
+            } else {
+                const hours = value.slice(0, value.length - 2) || '0'; // Часы
+                const minutes = value.slice(value.length - 2).padStart(2, '0'); // Минуты
+                input.value = `${hours}:${minutes}`;
+            }
+        }
     </script>
 </head>
 <body>
     <h2 style="text-align: center;">Отчёт</h2>
     <form action="#" method="post">
-        
         <div class="inline-group">
             <div>
                 <select id="month" name="month" required>
@@ -160,8 +171,8 @@
             </div>
         </div>
 
-		<div class="form-group hours-group" id="hours-group">
-            <input type="text" id="hours" name="hours" placeholder="чч:мм" pattern="\d{1,2}:\d{2}" required>
+        <div class="form-group hours-group" id="hours-group">
+            <input type="text" id="hours" name="hours" placeholder="чч:мм" required onblur="formatHours(this)">
             <label for="hours">Часы</label>
         </div>
 
